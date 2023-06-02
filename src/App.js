@@ -1,25 +1,38 @@
-import logo from './logo.svg';
+import React, { useContext } from 'react';
 import './App.css';
+import AuthNavbar from './components/Navbar/AuthNavbar';
+import NoAuthNavbar from './components/Navbar/NoAuthNavbar';
+import { BrowserRouter, Route, Routes,Navigate } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Reports from './pages/Reports';
+import Products from './pages/Products';
+import Auth from './components/sign-in/auth';
+import SignUp from './components/sign-up/sign-up';
+import { authContext } from './components/Auth/AuthProvider';
+import Brand from './pages/Brand';
 
-function App() {
+function Home() {
+  console.log("Home Route page !");
+  const { auth } = useContext(authContext);
+  console.log("auth >>>"+JSON.stringify(auth.data));
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <BrowserRouter>
+      {auth.data ? <AuthNavbar /> : <NoAuthNavbar />}
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route path="/signin" exact element = { <Auth/> }></Route>
+          <Route path="/signup" exact element = { <SignUp/> }></Route>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path='/brand' element={<Brand/>} />
+          <Route path='/reports' element={<Reports/>} />
+          <Route path='/products' element={<Products/>} />
+          <Route path='/logout' element={<Auth />} />
+          <Route path="*" element={<> not found</>} />
+        </Routes>
+      </ BrowserRouter>
+      </div>
   );
 }
 
-export default App;
+export default Home;
